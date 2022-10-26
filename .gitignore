@@ -1,0 +1,4 @@
+.idea/
+venv/
+__pycache__/
+/src/polls/migrations/00*.py

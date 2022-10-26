@@ -24,7 +24,7 @@ class PollAPIView(APIView):
                         status=status.HTTP_200_OK)
 
     def post(self, request):
-        poll_data = get_poll_data(request.data)
+        poll_data = get_poll_data(request)
         poll_data.update({'author': request.user})
         serialized_poll_data = PollSerializer(data=poll_data)
         serialized_poll_data.is_valid(raise_exception=True)
@@ -73,11 +73,10 @@ class PollDetailAPIView(APIView):
                         status=status.HTTP_200_OK)
 
     def put(self, request, pk):
-        # isAuthor check
         poll = self._get_poll_by_pk(pk)
         questions = Question.objects.filter(poll=poll)
 
-        serialized_poll_data = PollSerializer(data=get_poll_data(request.data), instance=poll)
+        serialized_poll_data = PollSerializer(data=get_poll_data(request), instance=poll)
         serialized_poll_data.is_valid(raise_exception=True)
         serialized_questions_data = QuestionSerializer(data=get_questions_data(request.data, poll),
                                                        instance=questions, many=True)
@@ -95,7 +94,6 @@ class PollDetailAPIView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def post(self, request, poll_pk):
-        # "answer_1=ans1testblabl&answer_2=anasds2ag&..."
         current_user = request.user if request.user else get_anonymous_user()
         answer_data = get_answers_data(self, request.data, current_user)
 

@@ -1,11 +1,12 @@
 from exceptions import UnknownQuestionId, IncorrectQuestionId
 
 
-def get_poll_data(data):
+def get_poll_data(request):
     poll_data = {
-        'title': data['title'],
-        'context': data['context'],
-        'end_date': data.get('end_date', default='')
+        'title': request.data['title'],
+        'context': request.data['context'],
+        'end_date': request.data.get('end_date', default=''),
+        'author': request.user,
     }
     return poll_data
 
